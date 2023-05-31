@@ -11,31 +11,25 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		usageAndExit()
+		fmt.Println("Usage: icp [file]")
+		os.Exit(1)
 	}
 
 	inputFile := os.Args[1]
 	number, suffix, err := parseFileName(inputFile)
 	if err != nil {
-		exitWithError("Failed to parse the numeric part of the file name.")
+		fmt.Println("Failed to parse the numeric part of the file name.")
+		os.Exit(1)
 	}
 
 	outputFile := strconv.Itoa(number+1) + suffix
-	if err := copyFile(inputFile, outputFile); err != nil {
-		exitWithError("Failed to copy file.")
+	err = copyFile(inputFile, outputFile)
+	if err != nil {
+		fmt.Println("Failed to copy file.")
+		os.Exit(1)
 	}
 
 	fmt.Printf("File copied to: %s\n", outputFile)
-}
-
-func usageAndExit() {
-	fmt.Println("Usage: icp [file]")
-	os.Exit(1)
-}
-
-func exitWithError(errMsg string) {
-	fmt.Println(errMsg)
-	os.Exit(1)
 }
 
 func parseFileName(inputFile string) (number int, suffix string, err error) {
