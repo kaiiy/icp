@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
+	"regexp"
 	"strconv"
-	"strings"
 )
 
 func main() {
@@ -32,17 +31,20 @@ func main() {
 	fmt.Printf("File copied to: %s\n", outputFile)
 }
 
-func parseFileName(inputFile string) (number int, suffix string, err error) {
-	baseName := filepath.Base(inputFile)
-	nonNumericPart := strings.TrimLeftFunc(baseName, func(r rune) bool { return '0' <= r && r <= '9' })
-	prefix := strings.TrimSuffix(baseName, nonNumericPart)
+func parseFileName(inputFile string) (number int, fileName string, err error) {
+	regex := regexp.MustCompile(`^(\d+)(_.+\..+)`)
+	matches := regex.FindStringSubmatch(inputFile)
 
-	number, err = strconv.Atoi(prefix)
+	if len(matches) != 3 {
+		return 0, "", fmt.Errorf("invalid file name")
+	}
+
+	number, err = strconv.Atoi(matches[1])
 	if err != nil {
 		return 0, "", err
 	}
 
-	return number, nonNumericPart, nil
+	return number, matches[2], nil
 }
 
 func copyFile(src, dst string) error {
