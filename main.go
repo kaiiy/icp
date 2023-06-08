@@ -17,7 +17,7 @@ func main() {
 	inputFile := os.Args[1]
 	number, suffix, err := parseFileName(inputFile)
 	if err != nil {
-		fmt.Println("Failed to parse the numeric part of the file name.")
+		fmt.Println("Failed to parse.")
 		os.Exit(1)
 	}
 
