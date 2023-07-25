@@ -8,10 +8,17 @@ import (
 	"strconv"
 )
 
+const Version = "v0.3.0"
+
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: icp [file]")
+		printUsage()
 		os.Exit(1)
+	}
+
+	if os.Args[1] == "-v" || os.Args[1] == "--version" {
+		fmt.Println("icp:", Version)
+		os.Exit(0)
 	}
 
 	inputFile := os.Args[1]
@@ -29,6 +36,15 @@ func main() {
 	}
 
 	fmt.Printf("File copied to: %s\n", outputFile)
+}
+
+func printUsage() {
+	fmt.Println(
+`Icp: Incremental File Copy
+
+Commands:
+  [filename]     Copy file and increment number within filename
+  -v, --version  Print the version`)
 }
 
 func parseFileName(inputFile string) (number int, fileName string, err error) {
